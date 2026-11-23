@@ -160,6 +160,13 @@ Fixes #123 / Implements feature X
 Your PR can only be merged if ALL of the following are true:
 
 1. ✅ **All CI checks pass** — type-check, lint, test, build
+
+> **Automated dependency updates**: Dependabot opens weekly PRs for npm
+> runtime, dev, and peer dependencies. Stellar/Soroban packages are batched
+> into a `stellar-runtime` group; build tooling into a `tooling` group.
+> The `compatibility.yml` workflow runs the full type-check, test, and build
+> suite on every PR that touches `package.json` or `package-lock.json` before
+> merge is allowed.
 2. ✅ **At least 1 reviewer approval** — code review complete
 3. ✅ **No unresolved conversations** — feedback addressed
 4. ✅ **Branch is up to date with main** — enforced by GitHub, use "Update branch" button if needed
