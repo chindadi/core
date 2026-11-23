@@ -61,3 +61,39 @@ Type-check the example against the SDK source:
 ```bash
 npm run typecheck:examples
 ```
+
+## Localization
+
+All user-facing strings in this example are routed through `src/shared/i18n.ts`
+using `i18n.t("key")` calls. No raw string literals appear in rendered JSX.
+
+### Adding a locale
+
+1. Open `src/shared/i18n.ts` and add an entry for your locale alongside
+   `EN_TRANSLATIONS` and `ES_TRANSLATIONS`:
+
+   ```ts
+   export const FR_TRANSLATIONS: Required<TranslationCatalog> = {
+     "ui.app.title": "sorokit-core — Portefeuille React",
+     "ui.wallet.connect_button": "Connecter Freighter",
+     // ... all ui.* keys
+   };
+   ```
+
+2. Register it with `createI18n`:
+
+   ```ts
+   const i18n = createI18n({ locale: "fr" }).withTranslations({ fr: FR_TRANSLATIONS });
+   ```
+
+3. Run the extraction script to verify no key is missing:
+
+   ```bash
+   node scripts/extract-i18n.mjs
+   ```
+
+   The script exits with code `1` if any key used in a component is absent
+   from `EN_TRANSLATIONS`. Add the key there before proceeding.
+
+4. The generated `scripts/messages.en.json` lists every key with its English
+   default — hand this file to translators as the source catalog.

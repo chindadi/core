@@ -4,6 +4,9 @@
  * Renders connect/disconnect, a balance list, and a payment form.
  * All sorokit-core calls are in useSorokit.ts — this file only reads state
  * and calls the callbacks the hook exposes.
+ *
+ * User-facing strings are routed through src/shared/i18n.ts so translators
+ * and extraction tooling can discover every message key in one place.
  */
 
 import React, { useState } from "react";
@@ -13,7 +16,12 @@ import {
   FREIGHTER_ID,
   FreighterModule,
 } from "@creit.tech/stellar-wallets-kit";
+import { createI18n } from "../../../src/shared/i18n";
 import { useSorokit } from "./useSorokit";
+
+// A single i18n instance for the app.  Swap the locale to load a different
+// language; add new locales via withTranslations().
+const i18n = createI18n({ locale: "en" });
 
 // Initialise SWK once outside the component so it isn't recreated on renders.
 // In a real app this typically lives in a context provider or module-level singleton.
@@ -48,24 +56,24 @@ export default function App() {
 
   return (
     <div style={{ maxWidth: 480, margin: "2rem auto", fontFamily: "system-ui, sans-serif" }}>
-      <h1>sorokit-core — React wallet</h1>
+      <h1>{i18n.t("ui.app.title")}</h1>
 
       {/* Connection */}
       {!isConnected ? (
         <button onClick={connect} disabled={loading}>
-          {loading ? "Connecting…" : "Connect Freighter"}
+          {loading ? i18n.t("ui.wallet.connecting") : i18n.t("ui.wallet.connect_button")}
         </button>
       ) : (
         <div>
           <p>
-            <strong>Connected:</strong>{" "}
+            <strong>{i18n.t("ui.wallet.connected_label")}</strong>{" "}
             <code style={{ wordBreak: "break-all" }}>{walletState.publicKey}</code>
           </p>
           <button onClick={disconnect} disabled={loading} style={{ marginRight: 8 }}>
-            Disconnect
+            {i18n.t("ui.wallet.disconnect_button")}
           </button>
           <button onClick={refreshBalances} disabled={loading}>
-            Refresh balances
+            {i18n.t("ui.wallet.refresh_balances")}
           </button>
         </div>
       )}
@@ -73,12 +81,12 @@ export default function App() {
       {/* Balances */}
       {balances.length > 0 && (
         <div style={{ marginTop: "1.5rem" }}>
-          <h2>Balances</h2>
+          <h2>{i18n.t("ui.balances.heading")}</h2>
           <table style={{ width: "100%", borderCollapse: "collapse" }}>
             <thead>
               <tr>
-                <th style={{ textAlign: "left" }}>Asset</th>
-                <th style={{ textAlign: "right" }}>Balance</th>
+                <th style={{ textAlign: "left" }}>{i18n.t("ui.balances.asset_column")}</th>
+                <th style={{ textAlign: "right" }}>{i18n.t("ui.balances.balance_column")}</th>
               </tr>
             </thead>
             <tbody>
@@ -96,14 +104,14 @@ export default function App() {
       {/* Payment form — only shown when connected */}
       {isConnected && (
         <form onSubmit={handleSend} style={{ marginTop: "1.5rem" }}>
-          <h2>Send XLM</h2>
+          <h2>{i18n.t("ui.payment.heading")}</h2>
           <div style={{ marginBottom: "0.75rem" }}>
             <label>
-              Destination
+              {i18n.t("ui.payment.destination_label")}
               <input
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
-                placeholder="G..."
+                placeholder={i18n.t("ui.payment.destination_placeholder")}
                 required
                 style={{ display: "block", width: "100%", marginTop: 4 }}
               />
@@ -111,18 +119,18 @@ export default function App() {
           </div>
           <div style={{ marginBottom: "0.75rem" }}>
             <label>
-              Amount (XLM)
+              {i18n.t("ui.payment.amount_label")}
               <input
                 value={amount}
                 onChange={(e) => setAmount(e.target.value)}
-                placeholder="10"
+                placeholder={i18n.t("ui.payment.amount_placeholder")}
                 required
                 style={{ display: "block", width: "100%", marginTop: 4 }}
               />
             </label>
           </div>
           <button type="submit" disabled={loading}>
-            {loading ? "Sending…" : "Send"}
+            {loading ? i18n.t("ui.payment.sending") : i18n.t("ui.payment.send_button")}
           </button>
         </form>
       )}

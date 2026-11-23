@@ -93,7 +93,9 @@
     "validate:exports": "node scripts/validate-exports.js",
     "size:check": "node scripts/check-bundle-size.mjs",
     "analyze:unused": "node scripts/analyzeUnused.js",
-    "analyze:bundle": "node scripts/analyze-bundle.js"
+    "analyze:bundle": "node scripts/analyze-bundle.js",
+    "i18n:extract": "node scripts/extract-i18n.mjs",
+    "i18n:check": "node scripts/extract-i18n.mjs"
   },
   "keywords": [
     "stellar",
